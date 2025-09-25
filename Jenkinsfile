@@ -35,18 +35,19 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                    timeout(time: 1, unit: 'HOURS') {
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            echo "WARNING: Quality Gate failed but continuing pipeline. Status: ${qg.status}"
-                        }
-                    }
+        stage('Quality Gate'){
+    steps {
+        script {
+            timeout(time: 1, unit: 'MINUTES') {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    echo "⚠️ Quality Gate failed or still in progress: ${qg.status}"
                 }
             }
         }
+    }
+}
+
 
         stage('Jar Publication') {
             steps {
